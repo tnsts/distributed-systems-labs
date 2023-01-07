@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>To-Do App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>To-Do List</h1>
+    <form th:action="@{/add}" method="post" class="form-inline">
+        <input type="text" name="title" placeholder="Title" required class="form-control mr-2">
+        <input type="text" name="description" placeholder="Description" required class="form-control mr-2">
+        <button type="submit" class="btn btn-primary">Add Task</button>
+    </form>
+    <table class="table mt-3">
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+        <tr th:each="task : ${tasks}">
+            <td th:text="${task.title}"></td>
+            <td th:text="${task.description}"></td>
+            <td th:if="${task.done}">Done</td>
+            <td th:if="${!task.done}">Not Done</td>
+            <td>
+                <a th:if="${!task.done}" th:href="@{/mark-as-done(id=${task.id})}" class="btn btn-success">Mark as Done</a>
+                <a th:if="${task.done}" th:href="@{/mark-as-not-done(id=${task.id})}" class="btn btn-warning">Mark as Not Done</a>
+                <a th:href="@{/delete(id=${task.id})}" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
