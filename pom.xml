@@ -15,6 +15,7 @@
 	<description>TODO app</description>
 	<properties>
 		<java.version>11</java.version>
+		<maven.test.skip>true</maven.test.skip>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -63,6 +64,7 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+					<jvmArguments>-Duser.timezone=UTC</jvmArguments>
 				</configuration>
 			</plugin>
 		</plugins>
