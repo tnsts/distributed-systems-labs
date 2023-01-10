@@ -35,6 +35,6 @@ jobs:
       - name: Update key permissions
         run: chmod 400 key.pem
       - name: Stop container
-        run: ssh -i key -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USERNAME }}@${{ secrets.AZURE_VM_HOST }} 'docker-compose -f /opt/server-composed/todoapp/docker-compose.yaml down -v'
+        run: ssh -i key.pem -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USERNAME }}@${{ secrets.AZURE_VM_HOST }} 'docker-compose -f /opt/server-composed/todoapp/docker-compose.yaml down -v'
       - name: Restart container
-        run: ssh -i key -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USERNAME }}@${{ secrets.AZURE_VM_HOST }} 'docker pull ${{ secrets.AZURE_CR_IMAGE_NAME }}:latest && docker-compose -f /opt/server-composed/todoapp/docker-compose.yaml up -d'
+        run: ssh -i key.pem -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USERNAME }}@${{ secrets.AZURE_VM_HOST }} 'docker pull ${{ secrets.AZURE_CR_IMAGE_NAME }}:latest && docker-compose -f /opt/server-composed/todoapp/docker-compose.yaml up -d'
