@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  todoapp-postgresql:
+    container_name: todoapp-postgresql
+    image: postgres:12.3-alpine
+    restart: unless-stopped
+    volumes:
+      - todoapp-postgresql:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - TZ=UTC
+    ports:
+      - ${POSTGRES_PORT}:5432
+
+  todoapp-app:
+    container_name: todoapp-app
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./logs:/logs
+    ports:
+      - ${APP_PORT}:8080
+    depends_on:
+      - todoapp-postgresql
+    environment:
+      - POSTGRES_URL=jdbc:postgresql://todoapp-postgresql:5432/${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    env_file:
+      - .env
+
+volumes:
+  todoapp-postgresql:
