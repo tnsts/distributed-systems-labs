@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todoapp
+  labels:
+    app: todoapp
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: todoapp
+      labels:
+        app: todoapp
+    spec:
+      containers:
+        - name: todoapp
+          image: dslabs.azurecr.io/todoapp:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: todoapp-config
+                  key: postgres-db
+                  optional: false
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: todoapp-config
+                  key: postgres-user
+                  optional: false
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: todoapp-config
+                  key: postgres-password
+                  optional: false
+            - name: POSTGRES_URL
+              value: "jdbc:postgresql://postgres:5432/$(POSTGRES_DB)"
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: regcred
+  selector:
+    matchLabels:
+      app: todoapp
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: todoapp
+spec:
+  selector:
+    app: todoapp
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: NodePort

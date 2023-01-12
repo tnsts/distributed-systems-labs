@@ -32,3 +32,6 @@ build/
 .vscode/
 
 .env
+
+/k8s/secrets/
+/k8s/config/
